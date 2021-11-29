@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
 
-
-
             binding.searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -74,6 +73,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            binding.citynametext.setOnKeyListener(new View.OnKeyListener() {
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    // If the event is a key-down event on the "enter" button
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                            (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        // Perform action on key press
+                        loadData(binding.citynametext.getText().toString(),AppId);
+                        binding.citynametext.clearFocus();
+                        binding.citynametext.clearFocus();
+                        return true;
+                    }
+                    return false;
+                }
+            });
 
 
     }
@@ -106,8 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
                         SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd hh:mm");
                         SimpleDateFormat output = new SimpleDateFormat("hh:mm");
-                        //SimpleDateFormat output = new SimpleDateFormat("EEEE");
-//
+
                         try {
                             Date t = input.parse(time);
                             time=output.format(t);
@@ -116,13 +128,13 @@ public class MainActivity extends AppCompatActivity {
                             System.out.println(e);
                         }
                         setImage(icon,i,temp,time);
-
                     }
                 }
             }
             @Override
             public void onFailure(Call<WeatherModel> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Invalide city name.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Invalid city name.", Toast.LENGTH_LONG).show();
+                System.out.println("Eroor");
             }
         });
     }
@@ -180,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "04d":
             case "04n":
-                setImageResource.setImageResource(R.drawable.overcast);
+                setImageResource.setImageResource(R.drawable.cloudy);
                 break;
             case "09d":
             case "09n":
