@@ -17,20 +17,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="bottom"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="20dp">
+
             <EditText
                 android:id="@+id/citynametext"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/background"
                 android:hint="Enter city name                         "
-                android:textSize="25dp"
                 android:maxLines="1"
-                />
+                android:textSize="25dp" />
 
             <ImageButton
                 android:id="@+id/search_button"
@@ -38,11 +39,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
+                android:background="@drawable/background"
                 android:padding="2dp"
                 android:scaleType="fitCenter"
-                android:background="@drawable/background"
                 app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
-
 
         </LinearLayout>
 
@@ -51,11 +51,13 @@
             android:layout_width="139dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="casual"
-            android:text="Tuesday, 15"
+            android:text="DAY"
             android:textColor="@color/white"
-            android:textSize="25dp" />
+            android:textSize="25dp"
+            android:gravity="center"
+            />
 
         <TextView
             android:id="@+id/cityName"
@@ -63,14 +65,14 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:fontFamily="casual"
-            android:text="Moscow"
+            android:text="CITY"
             android:textColor="@color/white"
             android:textSize="30dp"
             android:textStyle="bold" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="329dp"
             android:layout_margin="12dp"
             android:orientation="vertical"
             android:weightSum="2">
@@ -80,14 +82,15 @@
                 android:layout_width="180dp"
                 android:layout_height="51dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="44dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="+19°"
+                android:text="TEMP"
                 android:textColor="@color/white"
                 android:textSize="45dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -100,20 +103,19 @@
                 android:src="@drawable/sunny"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.443"
+                app:layout_constraintHorizontal_bias="0.421"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/temp0"
-                app:layout_constraintVertical_bias="0.157" />
+                app:layout_constraintVertical_bias="0.386" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            android:layout_width="383dp"
-            android:layout_height="203dp"
-            android:layout_gravity="left"
-            android:layout_margin="12dp"
-            android:gravity="left"
-            android:orientation="horizontal"
-            android:weightSum="0">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="5dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -141,7 +143,7 @@
                 <ImageView
                     android:id="@+id/icon1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="70dp"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -171,7 +173,7 @@
                 <ImageView
                     android:id="@+id/icon22"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="70dp"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -201,7 +203,7 @@
                 <ImageView
                     android:id="@+id/icon3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="70dp"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -231,7 +233,7 @@
                 <ImageView
                     android:id="@+id/icon4"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="70dp"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -261,16 +263,10 @@
                 <ImageView
                     android:id="@+id/icon"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="70dp"
                     android:src="@drawable/sunny" />
-
             </LinearLayout>
         </LinearLayout>
-
-
-
-
-
     </LinearLayout>
 
 
