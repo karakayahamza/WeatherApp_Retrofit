@@ -4,19 +4,11 @@ package com.example.weathertest.view;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.weathertest.R;
@@ -29,19 +21,16 @@ import com.google.gson.GsonBuilder;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
+
     //Manifest Application inside android:usesCleartextTraffic="true" add research it.
     //Date currentTime = Calendar.getInstance().getTime();
     String BASE_URL ="https://api.openweathermap.org/data/2.5/";
@@ -49,14 +38,16 @@ public class MainActivity extends AppCompatActivity {
     Retrofit retrofit;
     ActivityMainBinding binding;
     ImageView setImageResource;
+    WeatherModel weatherModel;
+    String time;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
-
 
             Gson gson = new GsonBuilder().setLenient().create();
 
@@ -88,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-
     }
 
     public void loadData(String cityname,String Appid) {
@@ -100,8 +90,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
                 if (response.isSuccessful()) {
-                    WeatherModel weatherModel = response.body();
-                    binding.cityName.setText(weatherModel.city.name.toUpperCase());
+                     weatherModel = response.body();
+
+                    String cityName = weatherModel.city.name.toUpperCase();
+                    if (cityName.contains("PROVINCE")){
+                        String target=cityName.copyValueOf("PROVINCE".toCharArray());
+                        cityName=cityName.replace(target, "");
+                    }
+                    binding.cityName.setText(cityName);
 
                     String iconf0 = weatherModel.list.get(0).weather.get(0).icon;
                     Integer tempf0 = (int) ((weatherModel.list.get(0).main.temp)-273.15);
@@ -115,10 +111,10 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 3;i<8;i++){
                         String icon = weatherModel.list.get(i).weather.get(0).icon;
                         Integer temp = (int) ((weatherModel.list.get(i).main.temp)-273.15);
-                        String time = weatherModel.list.get(i).dt_txt;
+                        time = weatherModel.list.get(i).dt_txt;
 
                         SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-                        SimpleDateFormat output = new SimpleDateFormat("hh:mm");
+                        SimpleDateFormat output = new SimpleDateFormat("HH:mm");
 
                         try {
                             Date t = input.parse(time);
@@ -170,17 +166,14 @@ public class MainActivity extends AppCompatActivity {
                 binding.temp5.setText(temp.toString()+"°");
                 binding.time5.setText(time);
                 break;
-
             default:
                 break;
-
         }
+
         switch (iconid) {
             case "01d":
-                setImageResource.setImageResource(R.drawable.sunny);
-                break;
             case "01n":
-                setImageResource.setImageResource(R.drawable.clear);
+                setImageResource.setImageResource(R.drawable.sunny);
                 break;
             case "02d":
             case "02n":
@@ -188,8 +181,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "03d":
             case "03n":
-                setImageResource.setImageResource(R.drawable.cloudy);
-                break;
             case "04d":
             case "04n":
                 setImageResource.setImageResource(R.drawable.cloudy);
@@ -218,6 +209,5 @@ public class MainActivity extends AppCompatActivity {
                 setImageResource.setImageResource(R.drawable.ic_launcher_background);
         }
     }
-
 }
 
