@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                      weatherModel = response.body();
 
+                     // delete 'PROVINCE' in json
                     String cityName = weatherModel.city.name.toUpperCase();
                     if (cityName.contains("PROVINCE")){
                         String target=cityName.copyValueOf("PROVINCE".toCharArray());
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                         Integer temp = (int) ((weatherModel.list.get(i).main.temp)-273.15);
                         time = weatherModel.list.get(i).dt_txt;
 
-                        SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                        SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         SimpleDateFormat output = new SimpleDateFormat("HH:mm");
 
                         try {
