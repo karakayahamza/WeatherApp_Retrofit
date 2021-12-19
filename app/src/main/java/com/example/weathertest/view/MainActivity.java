@@ -4,6 +4,8 @@ package com.example.weathertest.view;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView setImageResource;
     WeatherModel weatherModel;
     String time;
-
+    public SharedPreferences sharedPref;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,10 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-            Gson gson = new GsonBuilder().setLenient().create();
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+
+
+        Gson gson = new GsonBuilder().setLenient().create();
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -63,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
                     binding.citynametext.clearFocus();
                 }
             });
+
+            String cityShared = sharedPref.getString("cityName","KayıtYok");
+
+            loadData(cityShared,AppId);
+
 
             binding.citynametext.setOnKeyListener(new View.OnKeyListener() {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -78,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
             });
-
     }
 
     public void loadData(String cityname,String Appid) {
@@ -134,6 +143,10 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("Eroor");
             }
         });
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("cityName",cityname);
+        editor.commit();
     }
 
     public void setImage(String iconid,int where,Integer temp,String time){
