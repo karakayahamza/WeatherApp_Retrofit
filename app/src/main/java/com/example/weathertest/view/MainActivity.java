@@ -81,6 +81,7 @@ public class MainActivity extends FragmentActivity {
         hideSoftKeyboard(MainActivity.this);
         binding.citynametext.setText(" ");
         mCustomPagerAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(mCustomPagerAdapter.getCount());
     }
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
