@@ -1,273 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroundrectabgle"
+    android:orientation="vertical"
     tools:context=".view.MainActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:gravity="top"
-        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.98"
+        tools:ignore="MissingConstraints"
+        android:layout_weight="1"
+        />
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="20dp">
-
-            <EditText
-                android:id="@+id/citynametext"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@drawable/background"
-                android:hint="Enter city name                         "
-                android:maxLines="1"
-                android:textSize="25dp" />
-
-            <ImageButton
-                android:id="@+id/search_button"
-                android:layout_width="104dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:background="@drawable/background"
-                android:padding="2dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/timeroot"
-            android:layout_width="139dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:fontFamily="casual"
-            android:text="DAY"
-            android:textColor="@color/white"
-            android:textSize="25dp"
-            android:gravity="center"
+        <EditText
+            android:id="@+id/citynametext"
+            android:layout_width="337dp"
+            android:layout_height="match_parent"
+            android:hint="Search ..."
+            android:imeOptions="actionDone"
             />
 
-        <TextView
-            android:id="@+id/cityName"
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:onClick="add"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:fontFamily="casual"
-            android:text="CITY"
-            android:textColor="@color/white"
-            android:textSize="30dp"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_search" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="329dp"
-            android:layout_margin="12dp"
-            android:orientation="vertical"
-            android:weightSum="2">
-
-            <TextView
-                android:id="@+id/temp0"
-                android:layout_width="180dp"
-                android:layout_height="51dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="44dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="TEMP"
-                android:textColor="@color/white"
-                android:textSize="45dp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/icon0"
-                android:layout_width="159dp"
-                android:layout_height="155dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:src="@drawable/sunny"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.421"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/temp0"
-                app:layout_constraintVertical_bias="0.386" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_margin="5dp"
-            android:gravity="bottom"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/time1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:text="Now"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/temp1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:text="12°"
-                    android:textColor="@color/white" />
-
-                <ImageView
-                    android:id="@+id/icon1"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:src="@drawable/sunny" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/time2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:text="Now"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/temp2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:text="12°"
-                    android:textColor="@color/white" />
-
-                <ImageView
-                    android:id="@+id/icon22"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:src="@drawable/sunny" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/time3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:text="Now"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/temp3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:text="12°"
-                    android:textColor="@color/white" />
-
-                <ImageView
-                    android:id="@+id/icon3"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:src="@drawable/sunny" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/time4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:text="Now"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/temp4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:text="12°"
-                    android:textColor="@color/white" />
-
-                <ImageView
-                    android:id="@+id/icon4"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:src="@drawable/sunny" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/time5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:text="Now"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/temp5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:text="12°"
-                    android:textColor="@color/white" />
-
-                <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:src="@drawable/sunny" />
-            </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

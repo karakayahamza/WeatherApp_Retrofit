@@ -1,32 +1,25 @@
 package com.example.weathertest.view;
-//@HK KRKY
-//https://www.linkedin.com/in/hamza-karakaya-684a101b6/
-import static android.content.ContentValues.TAG;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager.widget.ViewPager;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.weathertest.R;
-import com.example.weathertest.adapter.CustomPagerAdapter;
-import com.example.weathertest.databinding.ActivityMainBinding;
+
+
+import com.example.weathertest.databinding.FragmentMainBinding;
 import com.example.weathertest.model.WeatherModel;
 import com.example.weathertest.service.WeatherAPI;
-import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -41,61 +34,53 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends FragmentActivity {
+public class MainFragment extends Fragment {
+    private static String cityname;
+    //Manifest Application inside android:usesCleartextTraffic="true" add research it.
+    //Date currentTime = Calendar.getInstance().getTime();
+    FragmentMainBinding binding;
+    String BASE_URL ="https://api.openweathermap.org/data/2.5/";
+    String AppId ="61e8b0259c092b1b9a15474cd800ee25";
+    Retrofit retrofit;
+    ImageView setImageResource;
+    WeatherModel weatherModel;
+    String time;
 
-    private int mCurrentPageSelected;
+
+    public static MainFragment newInstance(String cityName) {
+        return newInstance(MainActivity.FRAGMENT_TAG_ARG,cityName);
+    }
+
+    public static MainFragment newInstance(String tag,String cityName) {
+        MainFragment fragment = new MainFragment();
+        Bundle args = new Bundle();
+        args.putString("cityname",cityName);
+        args.putString(MainActivity.FRAGMENT_TAG_ARG, tag + "_" + fragment.hashCode());
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 
-    public static final String FRAGMENT_TAG_ARG = "tag";
 
-        private ActivityMainBinding binding;
-
-        private CustomPagerAdapter mCustomPagerAdapter;
-
-        private  ViewPager mViewPager;
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        binding = FragmentMainBinding.inflate(inflater,container,false);
 
+        Gson gson = new GsonBuilder().setLenient().create();
 
-        mCustomPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager());
-        mViewPager =findViewById(R.id.container);//Add fragment
-        mViewPager.setAdapter(mCustomPagerAdapter);
-        mCustomPagerAdapter.addPage(MainFragment.newInstance("Izmir"));
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
 
+        loadData(getArguments().getString("cityname"),AppId);
 
-        //mViewPager.getAdapter().getCount();
-
+        return binding.getRoot();
     }
 
-    public void add(View view){
-        String cityName =  binding.citynametext.getText().toString();
-        mCustomPagerAdapter.addPage(MainFragment.newInstance(cityName));
-        hideSoftKeyboard(MainActivity.this);
-        binding.citynametext.setText(" ");
-        mCustomPagerAdapter.notifyDataSetChanged();
-    }
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        if(inputMethodManager.isAcceptingText()){
-            inputMethodManager.hideSoftInputFromWindow(
-                    activity.getCurrentFocus().getWindowToken(),
-                    0
-            );
-        }
-    }
-
-}
-    /*public void loadData(String cityname,String Appid) {
+    public void loadData(String cityname,String Appid) {
         WeatherAPI service = retrofit.create(WeatherAPI.class);
 
         Call<WeatherModel> call = service.getData(cityname,Appid);
@@ -104,9 +89,9 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
                 if (response.isSuccessful()) {
-                     weatherModel = response.body();
+                    weatherModel = response.body();
 
-                     // delete 'PROVINCE' in json
+                    // delete 'PROVINCE' in json
                     String cityName = weatherModel.city.name.toUpperCase();
                     if (cityName.contains("PROVINCE")){
                         String target=cityName.copyValueOf("PROVINCE".toCharArray());
@@ -144,7 +129,7 @@ public class MainActivity extends FragmentActivity {
             }
             @Override
             public void onFailure(Call<WeatherModel> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Invalid city name.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Invalid city name.", Toast.LENGTH_LONG).show();
                 System.out.println("Eroor");
             }
         });
@@ -226,4 +211,6 @@ public class MainActivity extends FragmentActivity {
                 break;
             default:
                 setImageResource.setImageResource(R.drawable.ic_launcher_background);
-        }*/
+        }
+    }
+}
