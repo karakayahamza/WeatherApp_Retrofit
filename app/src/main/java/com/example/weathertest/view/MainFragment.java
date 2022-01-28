@@ -84,6 +84,7 @@ public class MainFragment extends Fragment {
         WeatherAPI service = retrofit.create(WeatherAPI.class);
 
         Call<WeatherModel> call = service.getData(cityname,Appid);
+        System.out.println(cityname);
         call.enqueue(new Callback<WeatherModel>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -126,6 +127,8 @@ public class MainFragment extends Fragment {
                         setImage(icon,i,temp,time);
                     }
                 }
+                else
+                    Toast.makeText(getContext(), "Invalid city name.", Toast.LENGTH_LONG).show();
             }
             @Override
             public void onFailure(Call<WeatherModel> call, Throwable t) {

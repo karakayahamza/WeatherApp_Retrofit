@@ -3,18 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="5dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/backgroundrectabgle"
     tools:context=".view.MainFragment">
-
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +22,7 @@
 
         <TextView
             android:id="@+id/timeroot"
-            android:layout_width="201dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="casual"
@@ -36,36 +33,31 @@
 
         <TextView
             android:id="@+id/cityName"
-            android:layout_width="225dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
             android:fontFamily="casual"
             android:gravity="center"
-            android:text="@string/city"
+            android:text="@string/ADANA"
             android:textColor="@color/white"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            tools:ignore="RtlHardcoded" />
+            android:textSize="50dp"
+            android:textStyle="bold"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="420dp"
-            android:layout_margin="12dp"
-            android:orientation="vertical"
-            android:weightSum="2">
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/temp0"
-                android:layout_width="226dp"
-                android:layout_height="33dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="44dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/temp"
                 android:textColor="@color/white"
-                android:textSize="45dp"
+                android:textSize="50dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
@@ -75,17 +67,16 @@
             <ImageView
                 android:id="@+id/icon0"
                 android:layout_width="160dp"
-                android:layout_height="138dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
+                android:layout_height="207dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/todo"
                 android:src="@drawable/sunny"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.421"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/temp0"
-                app:layout_constraintVertical_bias="0.386"
-                android:contentDescription="@string/todo" />
+                app:layout_constraintVertical_bias="0.386" />
         </LinearLayout>
 
         <LinearLayout
@@ -110,6 +101,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="Now"
+                    android:textSize="20dp"
                     android:textColor="@color/white" />
 
                 <TextView
@@ -118,12 +110,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="12°"
+                    android:textSize="20dp"
                     android:textColor="@color/white" />
 
                 <ImageView
                     android:id="@+id/icon1"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -140,6 +133,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="Now"
+                    android:textSize="20dp"
                     android:textColor="@color/white" />
 
                 <TextView
@@ -148,12 +142,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="12°"
+                    android:textSize="20dp"
                     android:textColor="@color/white" />
 
                 <ImageView
                     android:id="@+id/icon22"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -170,6 +165,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="Now"
+                    android:textSize="20dp"
                     android:textColor="@color/white" />
 
                 <TextView
@@ -178,12 +174,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="12°"
+                    android:textSize="20dp"
                     android:textColor="@color/white" />
 
                 <ImageView
                     android:id="@+id/icon3"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -200,6 +197,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="Now"
+                    android:textSize="20dp"
                     android:textColor="@color/white" />
 
                 <TextView
@@ -208,12 +206,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="12°"
+                    android:textSize="20dp"
                     android:textColor="@color/white" />
 
                 <ImageView
                     android:id="@+id/icon4"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -230,6 +229,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="Now"
+                    android:textSize="20dp"
                     android:textColor="@color/white" />
 
                 <TextView
@@ -238,12 +238,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="12°"
+                    android:textSize="20dp"
                     android:textColor="@color/white" />
 
                 <ImageView
                     android:id="@+id/icon"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/sunny" />
             </LinearLayout>
         </LinearLayout>
