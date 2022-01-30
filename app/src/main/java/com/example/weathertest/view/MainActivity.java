@@ -85,7 +85,7 @@ public class MainActivity extends FragmentActivity {
         mCustomPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager());
         mViewPager =findViewById(R.id.container);//Add fragment
         mViewPager.setAdapter(mCustomPagerAdapter);
-        mCustomPagerAdapter.addPage(MainFragment.newInstance("Izmir"));
+        mCustomPagerAdapter.addPage(MainFragment.newInstance("Luxembourg"));
 
         binding.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
     android:background="@drawable/backgroundrectabgle"
     tools:context=".view.MainFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,32 +21,46 @@
 
         <TextView
             android:id="@+id/timeroot"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
-            android:fontFamily="casual"
             android:gravity="center"
             android:text="@string/day"
             android:textColor="@color/white"
-            android:textSize="25sp" />
+            android:textSize="40sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="25sp"
+            android:autoSizeMaxTextSize="50sp"
+            android:autoSizeStepGranularity="2sp"
+            app:layout_constraintBottom_toTopOf="@+id/cityName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/cityName"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:fontFamily="casual"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
             android:gravity="center"
-            android:text="@string/ADANA"
+            android:text="@string/cityname"
             android:textColor="@color/white"
-            android:textSize="50dp"
-            android:textStyle="bold"/>
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            tools:layout_editor_absoluteX="5dp">
 
             <TextView
                 android:id="@+id/temp0"
@@ -80,13 +93,17 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout2"
+            android:layout_width="404dp"
+            android:layout_height="222dp"
             android:layout_gravity="bottom"
             android:layout_margin="5dp"
+            android:baselineAligned="false"
             android:gravity="bottom"
             android:orientation="horizontal"
-            android:baselineAligned="false">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -101,8 +118,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="Now"
-                    android:textSize="20dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/temp1"
@@ -110,8 +127,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="12°"
-                    android:textSize="20dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <ImageView
                     android:id="@+id/icon1"
@@ -133,8 +150,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="Now"
-                    android:textSize="20dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/temp2"
@@ -142,8 +159,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="12°"
-                    android:textSize="20dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <ImageView
                     android:id="@+id/icon22"
@@ -165,8 +182,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="Now"
-                    android:textSize="20dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/temp3"
@@ -174,8 +191,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="12°"
-                    android:textSize="20dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <ImageView
                     android:id="@+id/icon3"
@@ -197,8 +214,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="Now"
-                    android:textSize="20dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/temp4"
@@ -206,8 +223,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="12°"
-                    android:textSize="20dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <ImageView
                     android:id="@+id/icon4"
@@ -229,8 +246,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="Now"
-                    android:textSize="20dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/temp5"
@@ -238,8 +255,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:text="12°"
-                    android:textSize="20dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <ImageView
                     android:id="@+id/icon"
@@ -248,5 +265,5 @@
                     android:src="@drawable/sunny" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
