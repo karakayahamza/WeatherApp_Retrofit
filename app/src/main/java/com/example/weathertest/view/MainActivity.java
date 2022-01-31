@@ -3,6 +3,8 @@ package com.example.weathertest.view;
 //https://www.linkedin.com/in/hamza-karakaya-684a101b6/
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
@@ -34,6 +36,16 @@ import com.example.weathertest.adapter.CustomPagerAdapter;
 import com.example.weathertest.databinding.ActivityMainBinding;
 import com.example.weathertest.model.WeatherModel;
 import com.example.weathertest.service.WeatherAPI;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,7 +53,9 @@ import com.google.gson.GsonBuilder;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -64,8 +78,7 @@ public class MainActivity extends FragmentActivity {
 
         private  ViewPager mViewPager;
 
-        static boolean isConnect;
-
+        private int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -87,37 +100,36 @@ public class MainActivity extends FragmentActivity {
         mViewPager.setAdapter(mCustomPagerAdapter);
         mCustomPagerAdapter.addPage(MainFragment.newInstance("Luxembourg"));
 
-        binding.imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-                LayoutInflater layoutInflater = MainActivity.this.getLayoutInflater();
-
-                View dialogView= layoutInflater.inflate(R.layout.alerdialog_design,null);
-                final EditText editText = (EditText)dialogView.findViewById(R.id.placeName);
-                alertDialog.setView(dialogView);
-                Button button = dialogView.findViewById(R.id.button);
-                AlertDialog dialog = alertDialog.create();
-                dialog.show();
-                dialog.getWindow().setBackgroundDrawable(null);
-
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String cityname = editText.getText().toString();
-                        addNewPlace(cityname);
-                        dialog.dismiss();
-                    }
-                });
-            }
-        });
     }
-   public void addPlace(String cityName){
+
+    public void addPlace(String cityName){
+
             mCustomPagerAdapter.addPage(MainFragment.newInstance(cityName));
            //hideSoftKeyboard(MainActivity.this);
            mCustomPagerAdapter.notifyDataSetChanged();
            mViewPager.setCurrentItem(mCustomPagerAdapter.getCount());
+   }
+
+   public void addButton(View view){
+       AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+       LayoutInflater layoutInflater = MainActivity.this.getLayoutInflater();
+
+       View dialogView= layoutInflater.inflate(R.layout.alerdialog_design,null);
+       final EditText editText = (EditText)dialogView.findViewById(R.id.placeName);
+       alertDialog.setView(dialogView);
+       Button button = dialogView.findViewById(R.id.button);
+       AlertDialog dialog = alertDialog.create();
+       dialog.show();
+       dialog.getWindow().setBackgroundDrawable(null);
+
+       button.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               String cityname = editText.getText().toString();
+               addNewPlace(cityname);
+               dialog.dismiss();
+           }
+       });
    }
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =

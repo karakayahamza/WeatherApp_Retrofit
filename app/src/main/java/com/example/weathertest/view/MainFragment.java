@@ -65,7 +65,6 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
         binding = FragmentMainBinding.inflate(inflater,container,false);
 
         Gson gson = new GsonBuilder().setLenient().create();
