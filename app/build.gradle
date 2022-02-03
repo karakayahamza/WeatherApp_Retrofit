@@ -30,7 +30,6 @@ android {
     }
 }
 def retrofitVersion = '2.3.0'
-def rxJavaVersion = '2.1.1'
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -41,19 +40,29 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-
+    // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
 
-    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxJavaVersion"
+    // rxjava
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation "androidx.room:room-rxjava2:2.4.1"
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    annotationProcessor "androidx.room:room-compiler:2.4.1"
+
 
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+
+    // dao database
+
 
 
 }

@@ -71,7 +71,6 @@ public class CustomPagerAdapter extends PagerAdapter {
         if (currentTransaction == null) {
             currentTransaction = fragmentManager.beginTransaction();
         }
-
         currentTransaction.detach((Fragment) object);
     }
 
@@ -84,12 +83,10 @@ public class CustomPagerAdapter extends PagerAdapter {
                 currentPrimaryItem.setMenuVisibility(false);
                 currentPrimaryItem.setUserVisibleHint(false);
             }
-
             if (fragment != null) {
                 fragment.setMenuVisibility(true);
                 fragment.setUserVisibleHint(true);
             }
-
             currentPrimaryItem = fragment;
         }
     }
@@ -107,15 +104,6 @@ public class CustomPagerAdapter extends PagerAdapter {
     public boolean isViewFromObject(View view, Object object) {
         return ((Fragment) object).getView() == view;
     }
-// @Override
-    // public int getItemPosition(Object o) {
-    //     Integer result = fragmentsPosition.get(o);
-//
-    //     if (result == null) {
-    //         return PagerAdapter.POSITION_UNCHANGED;
-    //     }
-    //     return result;
-
     @Override
     public int getItemPosition (Object object)
     {
@@ -155,7 +143,6 @@ public class CustomPagerAdapter extends PagerAdapter {
                 fragmentsPosition.put(fragment, i - 1);
             }
         }
-
         pages.remove(position);
         notifyDataSetChanged();
     }

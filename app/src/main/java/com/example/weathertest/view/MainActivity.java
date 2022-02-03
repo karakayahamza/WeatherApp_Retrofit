@@ -1,76 +1,72 @@
 package com.example.weathertest.view;
 //@HK KRKY
 //https://www.linkedin.com/in/hamza-karakaya-684a101b6/
-import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
+import androidx.room.Room;
 import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.example.weathertest.R;
 import com.example.weathertest.adapter.CustomPagerAdapter;
+import com.example.weathertest.database.PlaceNamesDataBase;
+import com.example.weathertest.database.PlacesDao;
 import com.example.weathertest.databinding.ActivityMainBinding;
 import com.example.weathertest.model.WeatherModel;
 import com.example.weathertest.service.WeatherAPI;
-import com.google.android.gms.common.api.Status;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.reactivestreams.Subscriber;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
+import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends FragmentActivity {
 
-        String BASE_URL ="https://api.openweathermap.org/data/2.5/";
-        String AppId ="61e8b0259c092b1b9a15474cd800ee25";
-        Retrofit retrofit;
-
+        public static final String BASE_URL ="https://api.openweathermap.org/data/2.5/";
+        public static final String AppId ="61e8b0259c092b1b9a15474cd800ee25";
         public static final String FRAGMENT_TAG_ARG = "tag";
+
+        private Retrofit retrofit;
+        private CompositeDisposable compositeDisposable;
+        //private CompositeDisposable compositeDisposable2;
+        private PlaceNamesDataBase dataBase;
+        private PlacesDao placesDao;
 
         private ActivityMainBinding binding;
 
@@ -92,18 +88,48 @@ public class MainActivity extends FragmentActivity {
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
+
+        dataBase = Room.databaseBuilder(getApplicationContext(),PlaceNamesDataBase.class,"Places")
+                .allowMainThreadQueries()
+                .build();
+        placesDao = dataBase.placesDao();
+
+        //here
+        compositeDisposable = new CompositeDisposable();
+        compositeDisposable.add(placesDao.getAll()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(MainActivity.this::handleResponse));
 
         mCustomPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager());
         mViewPager =findViewById(R.id.container);//Add fragment
         mViewPager.setAdapter(mCustomPagerAdapter);
-        mCustomPagerAdapter.addPage(MainFragment.newInstance("Luxembourg"));
-
+        mCustomPagerAdapter.addPage(MainFragment.newInstance("Izmir"));
     }
 
-    public void addPlace(String cityName){
+    private void addToDatabase(WeatherModel weatherModel){
+        //placesDao.insert(weatherModel);
+        //here
+        compositeDisposable.add(placesDao.insert(weatherModel)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
+    }
 
+    private void handleResponse(List<WeatherModel> weatherModels) {
+        for (WeatherModel as : weatherModels){
+            addNewPlaceView(as.city.name);
+            System.out.println("WORKKKK");
+        }
+        //here
+        compositeDisposable.clear();
+    }
+
+
+    public void addNewPlaceView(String cityName){
             mCustomPagerAdapter.addPage(MainFragment.newInstance(cityName));
            //hideSoftKeyboard(MainActivity.this);
            mCustomPagerAdapter.notifyDataSetChanged();
@@ -115,7 +141,7 @@ public class MainActivity extends FragmentActivity {
        LayoutInflater layoutInflater = MainActivity.this.getLayoutInflater();
 
        View dialogView= layoutInflater.inflate(R.layout.alerdialog_design,null);
-       final EditText editText = (EditText)dialogView.findViewById(R.id.placeName);
+       final EditText editText = dialogView.findViewById(R.id.placeName);
        alertDialog.setView(dialogView);
        Button button = dialogView.findViewById(R.id.button);
        AlertDialog dialog = alertDialog.create();
@@ -125,9 +151,13 @@ public class MainActivity extends FragmentActivity {
        button.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               String cityname = editText.getText().toString();
-               addNewPlace(cityname);
-               dialog.dismiss();
+               if (mViewPager.getAdapter().getCount()<10){
+                   String cityname = editText.getText().toString();
+                   addNewPlace(cityname);
+                   dialog.dismiss();
+               }
+               else
+               Toast.makeText(MainActivity.this,"Size exceeded. Please delete one of the registered places.",Toast.LENGTH_LONG).show();
            }
        });
    }
@@ -146,153 +176,30 @@ public class MainActivity extends FragmentActivity {
     public void addNewPlace(String cityname){
         WeatherAPI service = retrofit.create(WeatherAPI.class);
 
-        Call<WeatherModel> call = service.getData(cityname,AppId);
-        call.enqueue(new Callback<WeatherModel>() {
-            @Override
-            public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
-            if (response.isSuccessful()){
-                addPlace(cityname);
-            }
-            else{
-            Toast.makeText(MainActivity.this,"Invalid place name",Toast.LENGTH_SHORT).show();
-            }
-            }
-            @Override
-            public void onFailure(Call<WeatherModel> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Invalid place name",Toast.LENGTH_SHORT).show();
-            }
-        });
+        compositeDisposable = new CompositeDisposable();
+        compositeDisposable.add(service.getData(cityname,AppId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<WeatherModel>(){
+                    @Override
+                    public void onComplete() {
+                        addNewPlaceView(cityname);
+                    }
+                    @Override
+                    public void onNext(@NonNull WeatherModel weatherModel) {
+                        //System.out.println(new Gson().toJson(weatherModel));
+                        addToDatabase(weatherModel);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(MainActivity.this,"Invalid place name",Toast.LENGTH_SHORT).show();
+                    }
+                }));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.clear();
     }
 }
-    /*public void loadData(String cityname,String Appid) {
-        WeatherAPI service = retrofit.create(WeatherAPI.class);
-
-        Call<WeatherModel> call = service.getData(cityname,Appid);
-        call.enqueue(new Callback<WeatherModel>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
-                if (response.isSuccessful()) {
-                     weatherModel = response.body();
-
-                     // delete 'PROVINCE' in json
-                    String cityName = weatherModel.city.name.toUpperCase();
-                    if (cityName.contains("PROVINCE")){
-                        String target=cityName.copyValueOf("PROVINCE".toCharArray());
-                        cityName=cityName.replace(target, "");
-                    }
-                    binding.cityName.setText(cityName);
-
-                    String iconf0 = weatherModel.list.get(0).weather.get(0).icon;
-                    Integer tempf0 = (int) ((weatherModel.list.get(0).main.temp)-273.15);
-                    String timef0 = weatherModel.list.get(0).dt_txt;
-                    setImage(iconf0,0,tempf0,timef0);
-
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEEE");
-                    LocalDateTime now = LocalDateTime.now();
-                    binding.timeroot.setText(dtf.format(now));
-
-                    for (int i = 3;i<8;i++){
-                        String icon = weatherModel.list.get(i).weather.get(0).icon;
-                        Integer temp = (int) ((weatherModel.list.get(i).main.temp)-273.15);
-                        time = weatherModel.list.get(i).dt_txt;
-
-                        SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                        SimpleDateFormat output = new SimpleDateFormat("HH:mm");
-
-                        try {
-                            Date t = input.parse(time);
-                            time=output.format(t);
-                        }
-                        catch (Exception e){
-                            System.out.println(e);
-                        }
-                        setImage(icon,i,temp,time);
-                    }
-                }
-            }
-            @Override
-            public void onFailure(Call<WeatherModel> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Invalid city name.", Toast.LENGTH_LONG).show();
-                System.out.println("Eroor");
-            }
-        });
-
-        //SharedPreferences.Editor editor = sharedPref.edit();
-        //editor.putString("cityName",cityname);
-        //editor.commit();
-    }
-
-    public void setImage(String iconid,int where,Integer temp,String time){
-        switch (where){
-            case 0:
-                setImageResource = binding.icon0;
-                binding.temp0.setText(temp.toString()+"°");
-                break;
-            case 3:
-                setImageResource = binding.icon1;
-                binding.temp1.setText(temp.toString()+"°");
-                binding.time1.setText(time);
-                break;
-            case 4:
-                setImageResource = binding.icon22;
-                binding.temp2.setText(temp.toString()+"°");
-                binding.time2.setText(time);
-                break;
-            case 5:
-                setImageResource = binding.icon3;
-                binding.temp3.setText(temp.toString()+"°");
-                binding.time3.setText(time);
-                break;
-            case 6:
-                setImageResource = binding.icon4;
-                binding.temp4.setText(temp.toString()+"°");
-                binding.time4.setText(time);
-                break;
-            case 7:
-                setImageResource = binding.icon;
-                binding.temp5.setText(temp.toString()+"°");
-                binding.time5.setText(time);
-                break;
-            default:
-                break;
-        }
-
-        switch (iconid) {
-            case "01d":
-            case "01n":
-                setImageResource.setImageResource(R.drawable.sunny);
-                break;
-            case "02d":
-            case "02n":
-                setImageResource.setImageResource(R.drawable.partlycloudyday);
-                break;
-            case "03d":
-            case "03n":
-            case "04d":
-            case "04n":
-                setImageResource.setImageResource(R.drawable.cloudy);
-                break;
-            case "09d":
-            case "09n":
-                setImageResource.setImageResource(R.drawable.freezingrain);
-                break;
-            case "10d":
-            case "10n":
-                setImageResource.setImageResource(R.drawable.heavyrainswrsday);
-                break;
-            case "11d":
-            case "11n":
-                setImageResource.setImageResource(R.drawable.cloudrainthunder);
-                break;
-            case "13d":
-            case "13n":
-                setImageResource.setImageResource(R.drawable.occlightsnow);
-                break;
-            case "50d":
-            case "50n":
-                setImageResource.setImageResource(R.drawable.freezingfog);
-                break;
-            default:
-                setImageResource.setImageResource(R.drawable.ic_launcher_background);
-        }*/

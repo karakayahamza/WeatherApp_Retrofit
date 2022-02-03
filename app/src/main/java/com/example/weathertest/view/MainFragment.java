@@ -1,51 +1,46 @@
 package com.example.weathertest.view;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 import com.example.weathertest.R;
-
-
 import com.example.weathertest.databinding.FragmentMainBinding;
 import com.example.weathertest.model.WeatherModel;
 import com.example.weathertest.service.WeatherAPI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainFragment extends Fragment {
-    private static String cityname;
     //Manifest Application inside android:usesCleartextTraffic="true" add research it.
     //Date currentTime = Calendar.getInstance().getTime();
     FragmentMainBinding binding;
-    String BASE_URL ="https://api.openweathermap.org/data/2.5/";
-    String AppId ="61e8b0259c092b1b9a15474cd800ee25";
     Retrofit retrofit;
     ImageView setImageResource;
-    WeatherModel weatherModel;
     String time;
-
+    String cityName;
+    CompositeDisposable compositeDisposable;
+    WeatherAPI weatherAPI;
 
     public static MainFragment newInstance(String cityName) {
         return newInstance(MainActivity.FRAGMENT_TAG_ARG,cityName);
@@ -60,30 +55,57 @@ public class MainFragment extends Fragment {
         return fragment;
     }
 
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         binding = FragmentMainBinding.inflate(inflater,container,false);
 
+       //dataBase = Room.databaseBuilder(getContext(),PlaceNamesDataBase.class,"PlaceNames").build();
+       //placesDao = dataBase.placesDao();
+
         Gson gson = new GsonBuilder().setLenient().create();
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+        weatherAPI = new Retrofit.Builder()
+                .baseUrl(MainActivity.BASE_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
+                .build()
+                .create(WeatherAPI.class);
 
-        loadData(getArguments().getString("cityname"),AppId);
+        loadData(getArguments().getString("cityname"),MainActivity.AppId);
+
+        saveDataBase();
 
         return binding.getRoot();
     }
 
-    public void loadData(String cityname,String Appid) {
-        WeatherAPI service = retrofit.create(WeatherAPI.class);
+    public void loadData(String cityname,String AppId) {
+       // WeatherAPI service = retrofit.create(WeatherAPI.class);
 
-        Call<WeatherModel> call = service.getData(cityname,Appid);
-        System.out.println(cityname);
+        compositeDisposable = new CompositeDisposable();
+        compositeDisposable.add(weatherAPI.getData(cityname,AppId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                //.subscribe(this::handleresponse));
+                .subscribeWith(new DisposableObserver<WeatherModel>() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onNext(@NonNull WeatherModel weatherModel) {
+                        handleresponse(weatherModel);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
+        /*
+               // Call<WeatherModel> call = service.getData(cityname,Appid);
         call.enqueue(new Callback<WeatherModel>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -91,34 +113,39 @@ public class MainFragment extends Fragment {
                 if (response.isSuccessful()) {
                     weatherModel = response.body();
 
-                    // delete 'PROVINCE' in json
-                    String cityName = weatherModel.city.name.toUpperCase();
+
+                    String sad = new Gson().toJson(response.body());
+
+
+                    System.out.println(sad);
+
+
+
+                    // Deleting 'PROVINCE' word from json data
+                    cityName = weatherModel.city.name.toUpperCase();
                     if (cityName.contains("PROVINCE")){
                         String target=cityName.copyValueOf("PROVINCE".toCharArray());
                         cityName=cityName.replace(target, "");
                     }
-                    binding.cityName.setText(cityName);
+                     binding.cityName.setText(cityName);
 
-                    String iconf0 = weatherModel.list.get(0).weather.get(0).icon;
-                    Integer tempf0 = (int) ((weatherModel.list.get(0).main.temp)-273.15);
-                    String timef0 = weatherModel.list.get(0).dt_txt;
-                    setImage(iconf0,0,tempf0,timef0);
 
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEEE");
-                    LocalDateTime now = LocalDateTime.now();
-                    binding.timeroot.setText(dtf.format(now));
+                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEEE");
+                     LocalDateTime now = LocalDateTime.now();
+                     binding.timeroot.setText(dtf.format(now));
 
-                    for (int i = 3;i<8;i++){
+                    for (int i = 0;i<6;i++){
                         String icon = weatherModel.list.get(i).weather.get(0).icon;
                         Integer temp = (int) ((weatherModel.list.get(i).main.temp)-273.15);
                         time = weatherModel.list.get(i).dt_txt;
 
-                        SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                        SimpleDateFormat output = new SimpleDateFormat("HH:mm");
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat output = new SimpleDateFormat("HH:mm");
 
                         try {
                             Date t = input.parse(time);
                             time=output.format(t);
+                            System.out.println(time);
                         }
                         catch (Exception e){
                             System.out.println(e);
@@ -134,11 +161,47 @@ public class MainFragment extends Fragment {
                 Toast.makeText(getContext(), "Invalid city name.", Toast.LENGTH_LONG).show();
                 System.out.println("Eroor");
             }
-        });
+        });*/
+    }
 
-        //SharedPreferences.Editor editor = sharedPref.edit();
-        //editor.putString("cityName",cityname);
-        //editor.commit();
+
+    public void saveDataBase(){
+
+       // PlaceNames placeNames = new PlaceNames(cityName,)
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void handleresponse(WeatherModel weatherModels){
+        // Deleting 'PROVINCE' word from json data
+        cityName = weatherModels.city.name.toUpperCase();
+        if (cityName.contains("PROVINCE")){
+            String target= String.copyValueOf("PROVINCE".toCharArray());
+            cityName=cityName.replace(target, "");
+        }
+        binding.cityName.setText(cityName);
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEEE");
+        LocalDateTime now = LocalDateTime.now();
+        binding.timeroot.setText(dtf.format(now));
+
+        for (int i = 0;i<6;i++){
+            String icon = weatherModels.list.get(i).weather.get(0).icon;
+            Integer temp = (int) ((weatherModels.list.get(i).main.temp)-273.15);
+            time = weatherModels.list.get(i).dt_txt;
+
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat output = new SimpleDateFormat("HH:mm");
+
+            try {
+                Date t = input.parse(time);
+                time=output.format(t);
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
+            setImage(icon,i,temp,time);
+        }
     }
 
     public void setImage(String iconid,int where,Integer temp,String time){
@@ -147,27 +210,27 @@ public class MainFragment extends Fragment {
                 setImageResource = binding.icon0;
                 binding.temp0.setText(temp.toString()+"°");
                 break;
-            case 3:
+            case 1:
                 setImageResource = binding.icon1;
                 binding.temp1.setText(temp.toString()+"°");
                 binding.time1.setText(time);
                 break;
-            case 4:
+            case 2:
                 setImageResource = binding.icon22;
                 binding.temp2.setText(temp.toString()+"°");
                 binding.time2.setText(time);
                 break;
-            case 5:
+            case 3:
                 setImageResource = binding.icon3;
                 binding.temp3.setText(temp.toString()+"°");
                 binding.time3.setText(time);
                 break;
-            case 6:
+            case 4:
                 setImageResource = binding.icon4;
                 binding.temp4.setText(temp.toString()+"°");
                 binding.time4.setText(time);
                 break;
-            case 7:
+            case 5:
                 setImageResource = binding.icon;
                 binding.temp5.setText(temp.toString()+"°");
                 binding.time5.setText(time);
