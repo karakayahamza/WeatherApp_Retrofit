@@ -35,7 +35,6 @@ public class MainFragment extends Fragment {
     //Manifest Application inside android:usesCleartextTraffic="true" add research it.
     //Date currentTime = Calendar.getInstance().getTime();
     FragmentMainBinding binding;
-    Retrofit retrofit;
     ImageView setImageResource;
     String time;
     String cityName;
@@ -60,9 +59,6 @@ public class MainFragment extends Fragment {
         //View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         binding = FragmentMainBinding.inflate(inflater,container,false);
 
-       //dataBase = Room.databaseBuilder(getContext(),PlaceNamesDataBase.class,"PlaceNames").build();
-       //placesDao = dataBase.placesDao();
-
         Gson gson = new GsonBuilder().setLenient().create();
 
         weatherAPI = new Retrofit.Builder()
@@ -73,8 +69,6 @@ public class MainFragment extends Fragment {
                 .create(WeatherAPI.class);
 
         loadData(getArguments().getString("cityname"),MainActivity.AppId);
-
-        saveDataBase();
 
         return binding.getRoot();
     }
@@ -104,71 +98,6 @@ public class MainFragment extends Fragment {
 
                     }
                 }));
-        /*
-               // Call<WeatherModel> call = service.getData(cityname,Appid);
-        call.enqueue(new Callback<WeatherModel>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
-                if (response.isSuccessful()) {
-                    weatherModel = response.body();
-
-
-                    String sad = new Gson().toJson(response.body());
-
-
-                    System.out.println(sad);
-
-
-
-                    // Deleting 'PROVINCE' word from json data
-                    cityName = weatherModel.city.name.toUpperCase();
-                    if (cityName.contains("PROVINCE")){
-                        String target=cityName.copyValueOf("PROVINCE".toCharArray());
-                        cityName=cityName.replace(target, "");
-                    }
-                     binding.cityName.setText(cityName);
-
-
-                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEEE");
-                     LocalDateTime now = LocalDateTime.now();
-                     binding.timeroot.setText(dtf.format(now));
-
-                    for (int i = 0;i<6;i++){
-                        String icon = weatherModel.list.get(i).weather.get(0).icon;
-                        Integer temp = (int) ((weatherModel.list.get(i).main.temp)-273.15);
-                        time = weatherModel.list.get(i).dt_txt;
-
-                        @SuppressLint("SimpleDateFormat") SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                        @SuppressLint("SimpleDateFormat") SimpleDateFormat output = new SimpleDateFormat("HH:mm");
-
-                        try {
-                            Date t = input.parse(time);
-                            time=output.format(t);
-                            System.out.println(time);
-                        }
-                        catch (Exception e){
-                            System.out.println(e);
-                        }
-                        setImage(icon,i,temp,time);
-                    }
-                }
-                else
-                    Toast.makeText(getContext(), "Invalid city name.", Toast.LENGTH_LONG).show();
-            }
-            @Override
-            public void onFailure(Call<WeatherModel> call, Throwable t) {
-                Toast.makeText(getContext(), "Invalid city name.", Toast.LENGTH_LONG).show();
-                System.out.println("Eroor");
-            }
-        });*/
-    }
-
-
-    public void saveDataBase(){
-
-       // PlaceNames placeNames = new PlaceNames(cityName,)
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

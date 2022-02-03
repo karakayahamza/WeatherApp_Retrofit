@@ -2,15 +2,11 @@ package com.example.weathertest.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import com.example.weathertest.view.MainActivity;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +51,7 @@ public class CustomPagerAdapter extends PagerAdapter {
 
         if (fragment != currentPrimaryItem) {
             fragment.setMenuVisibility(false);
-            fragment.setUserVisibleHint(false);
+            //fragment.setUserVisibleHint(false);
         }
 
         return fragment;
@@ -81,7 +77,7 @@ public class CustomPagerAdapter extends PagerAdapter {
         if (fragment != currentPrimaryItem) {
             if (currentPrimaryItem != null) {
                 currentPrimaryItem.setMenuVisibility(false);
-                currentPrimaryItem.setUserVisibleHint(false);
+                //currentPrimaryItem.setUserVisibleHint(false);
             }
             if (fragment != null) {
                 fragment.setMenuVisibility(true);

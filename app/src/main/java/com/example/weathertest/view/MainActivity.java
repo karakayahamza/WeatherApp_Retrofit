@@ -7,12 +7,8 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 import androidx.room.Room;
 import androidx.viewpager.widget.ViewPager;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,28 +26,11 @@ import com.example.weathertest.model.WeatherModel;
 import com.example.weathertest.service.WeatherAPI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.reactivestreams.Subscriber;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import io.reactivex.Flowable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -61,20 +40,15 @@ public class MainActivity extends FragmentActivity {
         public static final String BASE_URL ="https://api.openweathermap.org/data/2.5/";
         public static final String AppId ="61e8b0259c092b1b9a15474cd800ee25";
         public static final String FRAGMENT_TAG_ARG = "tag";
-
         private Retrofit retrofit;
         private CompositeDisposable compositeDisposable;
-        //private CompositeDisposable compositeDisposable2;
         private PlaceNamesDataBase dataBase;
         private PlacesDao placesDao;
-
         private ActivityMainBinding binding;
-
         private CustomPagerAdapter mCustomPagerAdapter;
-
         private  ViewPager mViewPager;
+        private boolean viewPagerState=false;
 
-        private int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -97,22 +71,22 @@ public class MainActivity extends FragmentActivity {
                 .build();
         placesDao = dataBase.placesDao();
 
-        //here
-        compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(placesDao.getAll()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(MainActivity.this::handleResponse));
 
         mCustomPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager());
         mViewPager =findViewById(R.id.container);//Add fragment
         mViewPager.setAdapter(mCustomPagerAdapter);
         mCustomPagerAdapter.addPage(MainFragment.newInstance("Izmir"));
+        //here
+
+        compositeDisposable = new CompositeDisposable();
+        compositeDisposable.add(placesDao.getAll()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(MainActivity.this::handleResponse));
     }
 
     private void addToDatabase(WeatherModel weatherModel){
         //placesDao.insert(weatherModel);
-        //here
         compositeDisposable.add(placesDao.insert(weatherModel)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,18 +96,17 @@ public class MainActivity extends FragmentActivity {
     private void handleResponse(List<WeatherModel> weatherModels) {
         for (WeatherModel as : weatherModels){
             addNewPlaceView(as.city.name);
-            System.out.println("WORKKKK");
         }
-        //here
         compositeDisposable.clear();
     }
-
 
     public void addNewPlaceView(String cityName){
             mCustomPagerAdapter.addPage(MainFragment.newInstance(cityName));
            //hideSoftKeyboard(MainActivity.this);
            mCustomPagerAdapter.notifyDataSetChanged();
-           mViewPager.setCurrentItem(mCustomPagerAdapter.getCount());
+           if(viewPagerState){
+               mViewPager.setCurrentItem(mCustomPagerAdapter.getCount());
+           }
    }
 
    public void addButton(View view){
@@ -155,6 +128,7 @@ public class MainActivity extends FragmentActivity {
                    String cityname = editText.getText().toString();
                    addNewPlace(cityname);
                    dialog.dismiss();
+                   viewPagerState = true;
                }
                else
                Toast.makeText(MainActivity.this,"Size exceeded. Please delete one of the registered places.",Toast.LENGTH_LONG).show();
