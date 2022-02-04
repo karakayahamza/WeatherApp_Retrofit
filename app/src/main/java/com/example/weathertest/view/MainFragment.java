@@ -20,12 +20,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -170,15 +167,20 @@ public class MainFragment extends Fragment {
 
         switch (iconid) {
             case "01d":
-            case "01n":
                 setImageResource.setImageResource(R.drawable.sunny);
                 break;
+            case "01n":
+                setImageResource.setImageResource(R.drawable.night);
+                break;
             case "02d":
-            case "02n":
                 setImageResource.setImageResource(R.drawable.partlycloudyday);
+                break;
+            case "02n":
+                setImageResource.setImageResource(R.drawable.partlycloudydaynight);
                 break;
             case "03d":
             case "03n":
+                setImageResource.setImageResource(R.drawable.cloud);
             case "04d":
             case "04n":
                 setImageResource.setImageResource(R.drawable.cloudy);
@@ -188,8 +190,10 @@ public class MainFragment extends Fragment {
                 setImageResource.setImageResource(R.drawable.freezingrain);
                 break;
             case "10d":
-            case "10n":
                 setImageResource.setImageResource(R.drawable.heavyrainswrsday);
+                break;
+            case "10n":
+                setImageResource.setImageResource(R.drawable.heavyrainswrsdaynight);
                 break;
             case "11d":
             case "11n":

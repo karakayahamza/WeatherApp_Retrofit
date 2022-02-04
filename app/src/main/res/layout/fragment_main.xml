@@ -4,111 +4,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="bottom"
     android:background="@drawable/backgroundrectabgle"
     tools:context=".view.MainFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout"
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="UselessParent">
-
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/timeroot"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
             android:layout_gravity="center"
+            android:autoSizeMaxTextSize="80dp"
+            android:autoSizeMinTextSize="50dp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
             android:gravity="center"
             android:text="@string/day"
             android:textColor="@color/white"
             android:textSize="40sp"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="25sp"
-            android:autoSizeMaxTextSize="50sp"
-            android:autoSizeStepGranularity="2sp"
-            app:layout_constraintBottom_toTopOf="@+id/cityName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:layout_editor_absoluteX="0dp" />
 
         <TextView
             android:id="@+id/cityName"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_width="411dp"
+            android:layout_height="126dp"
+            android:autoSizeMaxTextSize="100dp"
+            android:autoSizeMinTextSize="80dp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
             android:gravity="center"
             android:text="@string/cityname"
             android:textColor="@color/white"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="12sp"
-            android:autoSizeMaxTextSize="100sp"
-            android:autoSizeStepGranularity="2sp"
+            android:textSize="50dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            tools:layout_editor_absoluteY="53dp" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout3"
+        <TextView
+            android:id="@+id/temp0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-            tools:layout_editor_absoluteX="5dp">
+            android:layout_gravity="center"
+            android:autoSizeMaxTextSize="50sp"
+            android:autoSizeMinTextSize="25sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="@string/temp"
+            android:textColor="@color/white"
+            android:textSize="50dp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/temp0"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/temp"
-                android:textColor="@color/white"
-                android:textSize="50dp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/icon0"
-                android:layout_width="160dp"
-                android:layout_height="207dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/todo"
-                android:src="@drawable/sunny"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.421"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/temp0"
-                app:layout_constraintVertical_bias="0.386" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/icon0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/sunny"
+            tools:layout_editor_absoluteX="106dp" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="404dp"
-            android:layout_height="222dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_margin="5dp"
             android:baselineAligned="false"
             android:gravity="bottom"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -132,8 +110,8 @@
 
                 <ImageView
                     android:id="@+id/icon1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="80dp"
+                    android:layout_height="150dp"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -164,8 +142,8 @@
 
                 <ImageView
                     android:id="@+id/icon22"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="80dp"
+                    android:layout_height="150dp"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -196,8 +174,8 @@
 
                 <ImageView
                     android:id="@+id/icon3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="80dp"
+                    android:layout_height="150dp"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -228,8 +206,8 @@
 
                 <ImageView
                     android:id="@+id/icon4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="80dp"
+                    android:layout_height="150dp"
                     android:src="@drawable/sunny" />
 
             </LinearLayout>
@@ -260,10 +238,10 @@
 
                 <ImageView
                     android:id="@+id/icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="80dp"
+                    android:layout_height="150dp"
                     android:src="@drawable/sunny" />
             </LinearLayout>
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

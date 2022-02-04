@@ -6,12 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 import androidx.room.Room;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -83,7 +85,18 @@ public class MainActivity extends FragmentActivity {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(MainActivity.this::handleResponse));
+
+        binding.refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+            Toast.makeText(getApplicationContext(),"HELLO",Toast.LENGTH_LONG).show();
+
+
+                binding.refresh.setRefreshing(false);
+            }
+        });
     }
+
 
     private void addToDatabase(WeatherModel weatherModel){
         //placesDao.insert(weatherModel);
@@ -97,6 +110,8 @@ public class MainActivity extends FragmentActivity {
         for (WeatherModel as : weatherModels){
             addNewPlaceView(as.city.name);
         }
+
+
         compositeDisposable.clear();
     }
 
@@ -129,6 +144,8 @@ public class MainActivity extends FragmentActivity {
                    addNewPlace(cityname);
                    dialog.dismiss();
                    viewPagerState = true;
+
+                   // Control places can't repeat ********** add a method
                }
                else
                Toast.makeText(MainActivity.this,"Size exceeded. Please delete one of the registered places.",Toast.LENGTH_LONG).show();

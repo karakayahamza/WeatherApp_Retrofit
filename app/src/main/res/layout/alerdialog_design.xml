@@ -25,7 +25,7 @@
             android:layout_height="65dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_corners"
-            android:text="Button" />
+            android:text="ADD" />
     </LinearLayout>
 
 </LinearLayout>

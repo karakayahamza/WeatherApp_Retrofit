@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.weathertest.model.WeatherModel;
 
@@ -24,5 +25,6 @@ public interface PlacesDao {
     @Delete
     io.reactivex.Completable  delete(WeatherModel weatherModel);
 
-
+    @Update
+    io.reactivex.Completable  upDate(WeatherModel weatherModel);
 }
