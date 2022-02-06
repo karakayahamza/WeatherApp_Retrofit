@@ -3,13 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/drawable/design.xml" value="0.3482051282051282" />
-        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3482051282051282" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/drawable/rounded_corners.xml" value="0.3482051282051282" />
-        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout-v26/fragment_main.xml" value="0.3375" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/actionbar_layout.xml" value="0.3323076923076923" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/activity_home.xml" value="0.3375" />
-        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/activity_main.xml" value="0.14606741573033707" />
+        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/activity_weather.xml" value="0.3323076923076923" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/alerdialog_design.xml" value="0.33" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/cicrlemenu.xml" value="0.3323076923076923" />
@@ -19,17 +16,14 @@
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/fragment_home_activity.xml" value="0.31846153846153846" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/fragment_main.xml" value="0.33" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/fragment_message.xml" value="0.3375" />
-        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/fragment_recycler_view.xml" value="0.2740740740740741" />
-        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/fragment_recycler_view_fragment.xml" value="0.3314814814814815" />
-        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/frame_textview.xml" value="0.2740740740740741" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/guillotine.xml" value="0.3323076923076923" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/nav_header.xml" value="0.3323076923076923" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/popup.xml" value="0.3323076923076923" />
-        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/recycler_row.xml" value="0.2740740740740741" />
-        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/recycler_view_fragment.xml" value="0.2740740740740741" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/layout/search_layout.xml" value="0.3323076923076923" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/menu/drawer_menu.xml" value="0.3323076923076923" />
         <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit/app/src/main/res/menu/menu.xml" value="0.3323076923076923" />
+        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit2/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/KRKY/AndroidStudioProjects/WeatherApp_Retrofit2/app/src/main/res/layout/fragment_main.xml" value="0.3375" />
         <entry key="..\:/Users/hkkrk/AndroidStudioProjects/WeatherTest/app/src/main/res/drawable/background.xml" value="0.2703125" />
         <entry key="..\:/Users/hkkrk/AndroidStudioProjects/WeatherTest/app/src/main/res/drawable/design.xml" value="0.2703125" />
         <entry key="..\:/Users/hkkrk/AndroidStudioProjects/WeatherTest/app/src/main/res/layout/activity_main.xml" value="0.264" />

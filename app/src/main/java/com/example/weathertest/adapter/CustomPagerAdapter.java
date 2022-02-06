@@ -109,6 +109,8 @@ public class CustomPagerAdapter extends PagerAdapter {
         else
             return index;
     }
+
+
     // ---------------------------------- Page actions ----------------------------------
 
     public void addPage(Fragment fragment) {

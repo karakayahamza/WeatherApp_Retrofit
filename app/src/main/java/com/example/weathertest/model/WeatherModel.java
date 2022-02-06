@@ -154,12 +154,4 @@ public class WeatherModel  {
         public int sunrise;
         public int sunset;
     }
-
-    public WeatherModel(String cod, int message, int cnt, List<WeatherModel.list> list, City city) {
-        this.cod = cod;
-        this.message = message;
-        this.cnt = cnt;
-        this.list = list;
-        this.city = city;
-    }
 }
