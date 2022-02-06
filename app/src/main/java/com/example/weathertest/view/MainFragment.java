@@ -54,7 +54,6 @@ public class MainFragment extends Fragment {
 
     public static MainFragment newInstance(String cityName,WeatherModel weatherModel) {
         weatherModel2 = weatherModel;
-        //System.out.println(weatherModel2.city.name+"EROROROR");
         return newInstance(MainActivity.FRAGMENT_TAG_ARG,cityName);
     }
 
@@ -82,7 +81,6 @@ public class MainFragment extends Fragment {
                 .build()
                 .create(WeatherAPI.class);
 
-
         dataBase = Room.databaseBuilder(getContext(),PlaceNamesDataBase.class,"Places")
                 .allowMainThreadQueries()
                 .build();
@@ -98,26 +96,26 @@ public class MainFragment extends Fragment {
        // WeatherAPI service = retrofit.create(WeatherAPI.class);
 
         compositeDisposable = new CompositeDisposable();
-        /**compositeDisposable.add(weatherAPI.getData(cityname,AppId)
+        compositeDisposable.add(weatherAPI.getData(cityname,AppId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<WeatherModel>() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onNext(@NonNull WeatherModel weatherModel) {
-                        handleresponse(weatherModel);
+                        setAllData(weatherModel);
+                  }
+
+                  @Override
+                  public void onError(@NonNull Throwable e) {
+
+                  }
+
+                  @Override
+                  public void onComplete() {
+
                     }
-//
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-//
-                    }
-//
-                    @Override
-                    public void onComplete() {
-//
-                    }
-                }));*/
+                }));
         handleresponse(cityname);
     }
 
@@ -131,36 +129,7 @@ public class MainFragment extends Fragment {
                 .subscribeWith(new DisposableSingleObserver<WeatherModel>() {
                     @Override
                     public void onSuccess(@NonNull WeatherModel weatherModels) {
-
-                        String cityName = weatherModels.city.name.toUpperCase();
-                        System.out.println(cityName+"---------7777");
-                        if (cityName.contains("PROVINCE")){
-                            String target= String.copyValueOf("PROVINCE".toCharArray());
-                            cityName=cityName.replace(target, "");
-                        }
-                        binding.cityName.setText(cityName);
-
-                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEEE");
-                        LocalDateTime now = LocalDateTime.now();
-                        binding.timeroot.setText(dtf.format(now));
-
-                        for (int i = 0;i<6;i++){
-                            String icon = weatherModels.list.get(i).weather.get(0).icon;
-                            Integer temp = (int) ((weatherModels.list.get(i).main.temp)-273.15);
-                            time = weatherModels.list.get(i).dt_txt;
-
-                            @SuppressLint("SimpleDateFormat") SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                            @SuppressLint("SimpleDateFormat") SimpleDateFormat output = new SimpleDateFormat("HH:mm");
-
-                            try {
-                                Date t = input.parse(time);
-                                time=output.format(t);
-                            }
-                            catch (Exception e){
-                                System.out.println(e);
-                            }
-                            setImage(icon,i,temp,time);
-                        }
+                        setAllData(weatherModels);
                     }
 
                     @Override
@@ -169,6 +138,40 @@ public class MainFragment extends Fragment {
                     }
                 }));
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setAllData(WeatherModel weatherModels){
+        String cityName = weatherModels.city.name.toUpperCase();
+        if (cityName.contains("PROVINCE")){
+            String target= String.copyValueOf("PROVINCE".toCharArray());
+            cityName=cityName.replace(target, "");
+        }
+        binding.cityName.setText(cityName);
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEEE");
+        LocalDateTime now = LocalDateTime.now();
+        binding.timeroot.setText(dtf.format(now));
+
+        for (int i = 0;i<6;i++){
+            String icon = weatherModels.list.get(i).weather.get(0).icon;
+            Integer temp = (int) ((weatherModels.list.get(i).main.temp)-273.15);
+            time = weatherModels.list.get(i).dt_txt;
+
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat output = new SimpleDateFormat("HH:mm");
+
+            try {
+                Date t = input.parse(time);
+                time=output.format(t);
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
+            setImage(icon,i,temp,time);
+        }
+    }
+
+
 
     public void setImage(String iconid,int where,Integer temp,String time){
         switch (where){

@@ -57,6 +57,7 @@ public class CustomPagerAdapter extends PagerAdapter {
         return fragment;
     }
 
+
     @Override
     public int getCount() {
         return pages.size();
@@ -110,7 +111,6 @@ public class CustomPagerAdapter extends PagerAdapter {
             return index;
     }
 
-
     // ---------------------------------- Page actions ----------------------------------
 
     public void addPage(Fragment fragment) {
@@ -143,6 +143,11 @@ public class CustomPagerAdapter extends PagerAdapter {
         }
         pages.remove(position);
         notifyDataSetChanged();
+    }
+
+    public void upDatePage(int position){
+        Fragment pageFragment = pages.get(position);
+        System.out.println("----------"+pageFragment.getArguments().getString("cityname")+"----------");
     }
 
 }

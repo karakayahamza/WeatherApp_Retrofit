@@ -58,8 +58,6 @@ public class MainActivity extends FragmentActivity {
         private PlacesDao placesDao;
         private ActivityMainBinding binding;
         private boolean viewPagerState=false;
-        private RecyclerAdapter recyclerAdapter;
-        private ArrayList<WeatherModel> weatherModelList = new ArrayList<>();
         CustomPagerAdapter mCustomPagerAdapter;
         ViewPager mViewPager;
 
@@ -107,14 +105,14 @@ public class MainActivity extends FragmentActivity {
        binding.container.setAdapter(recyclerAdapter);*/
 
 
-
         binding.refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-            Toast.makeText(getApplicationContext(),"HELLO",Toast.LENGTH_LONG).show();
 
 
+            mCustomPagerAdapter.removePage(mViewPager.getCurrentItem());
             binding.refresh.setRefreshing(false);
+            Toast.makeText(getApplicationContext(),"Deleted",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -127,8 +125,12 @@ public class MainActivity extends FragmentActivity {
                     public void onSuccess(@NonNull List<WeatherModel> weatherModels) {
                         for (WeatherModel as : weatherModels){
                             mCustomPagerAdapter.addPage(MainFragment.newInstance(as.city.name,as));
-                            mViewPager.invalidate();
+                            //mViewPager.invalidate();
                         }
+
+                        mCustomPagerAdapter.getItemPosition(mViewPager.getCurrentItem());
+                        System.out.println("*******");
+
                     }
                     @Override
                     public void onError(@NonNull Throwable e) {
@@ -211,7 +213,7 @@ public class MainActivity extends FragmentActivity {
                         //System.out.println(new Gson().toJson(weatherModel));
                         addToDatabase(weatherModel);
                         mCustomPagerAdapter.addPage(MainFragment.newInstance(weatherModel.city.name));
-                        mViewPager.invalidate();
+                        //mViewPager.invalidate();
                         /**recyclerAdapter.notifyItemInserted(weatherModelList.size()-1);*/
                         /**weatherModelList.add(weatherModel);*/
                     }
