@@ -1,6 +1,11 @@
 package com.example.weathertest.view;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -61,7 +66,7 @@ public class MainFragment extends Fragment {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
         args.putString("cityname",cityName);
-        args.putString(MainActivity.FRAGMENT_TAG_ARG, tag + "_" + fragment.hashCode());
+        args.putString(MainActivity.FRAGMENT_TAG_ARG,tag + "_" + fragment.hashCode());
         fragment.setArguments(args);
         return fragment;
     }
@@ -85,6 +90,7 @@ public class MainFragment extends Fragment {
                 .allowMainThreadQueries()
                 .build();
         placesDao = dataBase.placesDao();
+        compositeDisposable = new CompositeDisposable();
 
         loadData(getArguments().getString("cityname"),MainActivity.AppId);
 
@@ -94,7 +100,7 @@ public class MainFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadData(String cityname, String AppId){
        // WeatherAPI service = retrofit.create(WeatherAPI.class);
-
+        handleresponse(cityname);
         compositeDisposable = new CompositeDisposable();
         compositeDisposable.add(weatherAPI.getData(cityname,AppId)
                 .subscribeOn(Schedulers.io())
@@ -104,19 +110,18 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onNext(@NonNull WeatherModel weatherModel) {
                         setAllData(weatherModel);
-                  }
+                    }
 
-                  @Override
-                  public void onError(@NonNull Throwable e) {
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        handleresponse(cityname);
+                    }
 
-                  }
-
-                  @Override
-                  public void onComplete() {
+                    @Override
+                    public void onComplete() {
 
                     }
                 }));
-        handleresponse(cityname);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -170,8 +175,6 @@ public class MainFragment extends Fragment {
             setImage(icon,i,temp,time);
         }
     }
-
-
 
     public void setImage(String iconid,int where,Integer temp,String time){
         switch (where){

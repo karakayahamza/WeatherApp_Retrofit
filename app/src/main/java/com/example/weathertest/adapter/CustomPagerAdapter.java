@@ -1,31 +1,60 @@
 package com.example.weathertest.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.room.Room;
 import androidx.viewpager.widget.PagerAdapter;
+
+import com.example.weathertest.database.PlaceNamesDataBase;
+import com.example.weathertest.database.PlacesDao;
+import com.example.weathertest.model.WeatherModel;
+import com.example.weathertest.service.WeatherAPI;
 import com.example.weathertest.view.MainActivity;
+import com.example.weathertest.view.MainFragment;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class CustomPagerAdapter extends PagerAdapter {
 
     private List<Fragment> pages = new ArrayList<>();
     private Map<Fragment, Integer> fragmentsPosition = new HashMap<>();
-
     private Fragment currentPrimaryItem;
     private FragmentManager fragmentManager;
     private FragmentTransaction currentTransaction;
 
 
+    public List<Fragment> getPages() {
+        return pages;
+    }
+
+    public void setPages(List<Fragment> pages) {
+        this.pages = pages;
+    }
+
     public CustomPagerAdapter(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         if (currentTransaction == null) {
@@ -53,7 +82,6 @@ public class CustomPagerAdapter extends PagerAdapter {
             fragment.setMenuVisibility(false);
             //fragment.setUserVisibleHint(false);
         }
-
         return fragment;
     }
 
@@ -113,12 +141,14 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     // ---------------------------------- Page actions ----------------------------------
 
-    public void addPage(Fragment fragment) {
-        fragmentsPosition.clear();
-        pages.add(fragment);
-        notifyDataSetChanged();
+    public void addPage(Fragment fragment){
+        //if (pages.size()<5){
+            fragmentsPosition.clear();
+            pages.add(fragment);
+            notifyDataSetChanged();
+       //else
+        //    Toast.makeText(currentPrimaryItem.getContext(), "Please delete any place and try again",Toast.LENGTH_LONG).show();
     }
-
 
     public void removePage(int position) {
         fragmentsPosition.clear();
@@ -143,11 +173,11 @@ public class CustomPagerAdapter extends PagerAdapter {
         }
         pages.remove(position);
         notifyDataSetChanged();
+
     }
 
-    public void upDatePage(int position){
-        Fragment pageFragment = pages.get(position);
-        System.out.println("----------"+pageFragment.getArguments().getString("cityname")+"----------");
+    public void upDatePage(){
     }
+
 
 }

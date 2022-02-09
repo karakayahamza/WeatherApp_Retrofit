@@ -4,30 +4,28 @@ package com.example.weathertest.view;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.DatabaseConfiguration;
+import androidx.room.InvalidationTracker;
 import androidx.room.Room;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.weathertest.R;
 import com.example.weathertest.adapter.CustomPagerAdapter;
-import com.example.weathertest.adapter.RecyclerAdapter;
 import com.example.weathertest.database.PlaceNamesDataBase;
 import com.example.weathertest.database.PlacesDao;
 import com.example.weathertest.databinding.ActivityMainBinding;
@@ -36,7 +34,6 @@ import com.example.weathertest.service.WeatherAPI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -47,20 +44,21 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements SwipeRefreshLayout.OnRefreshListener {
 
         public static final String BASE_URL ="https://api.openweathermap.org/data/2.5/";
         public static final String AppId ="61e8b0259c092b1b9a15474cd800ee25";
         public static final String FRAGMENT_TAG_ARG = "tag";
         private WeatherAPI weatherAPI;
         private CompositeDisposable compositeDisposable;
+        private CompositeDisposable compositeDisposable2;
         private PlaceNamesDataBase dataBase;
         private PlacesDao placesDao;
+        private Gson gson;
         private ActivityMainBinding binding;
         private boolean viewPagerState=false;
-        CustomPagerAdapter mCustomPagerAdapter;
-        ViewPager mViewPager;
-
+        private CustomPagerAdapter mCustomPagerAdapter;
+        private ViewPager mViewPager;
 
     @SuppressLint("CheckResult")
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -71,51 +69,36 @@ public class MainActivity extends FragmentActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        Gson gson = new GsonBuilder().setLenient().create();
-
+        //API initialize
+        gson = new GsonBuilder().setLenient().create();
         weatherAPI = new Retrofit.Builder()
                 .baseUrl(MainActivity.BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
                 .create(WeatherAPI.class);
+        //DATABASE initialize
+
 
         dataBase = Room.databaseBuilder(getApplicationContext(),PlaceNamesDataBase.class,"Places")
                 .allowMainThreadQueries()
                 .build();
+
         placesDao = dataBase.placesDao();
 
+        //CompositeDisposible initialize
+        compositeDisposable = new CompositeDisposable();
+        compositeDisposable2 = new CompositeDisposable();
 
+        //Viewpager initialize
         mCustomPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager());
         mViewPager =findViewById(R.id.container);//Add fragment
         mViewPager.setAdapter(mCustomPagerAdapter);
-        mCustomPagerAdapter.addPage(MainFragment.newInstance("Izmir"));
 
-        /**compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(placesDao.getAll()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(MainActivity.this::TEST));*/
+        //RefreshLayout initialize
+        binding.refresh.setOnRefreshListener(this);
 
-
-
-       /**recyclerAdapter = new RecyclerAdapter();
-
-       recyclerAdapter.setWeatherModelList(weatherModelList);
-       binding.container.setAdapter(recyclerAdapter);*/
-
-
-        binding.refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-
-            mCustomPagerAdapter.removePage(mViewPager.getCurrentItem());
-            binding.refresh.setRefreshing(false);
-            Toast.makeText(getApplicationContext(),"Deleted",Toast.LENGTH_LONG).show();
-            }
-        });
-
+        //Get all data in room database
         compositeDisposable = new CompositeDisposable();
         compositeDisposable.add(placesDao.getAll()
                 .subscribeOn(Schedulers.io())
@@ -125,42 +108,24 @@ public class MainActivity extends FragmentActivity {
                     public void onSuccess(@NonNull List<WeatherModel> weatherModels) {
                         for (WeatherModel as : weatherModels){
                             mCustomPagerAdapter.addPage(MainFragment.newInstance(as.city.name,as));
-                            //mViewPager.invalidate();
                         }
-
-                        mCustomPagerAdapter.getItemPosition(mViewPager.getCurrentItem());
-                        System.out.println("*******");
-
                     }
                     @Override
                     public void onError(@NonNull Throwable e) {
                     }
                 }));
-
     }
 
-
-   /** private void TEST(List<WeatherModel> weatherModels){
-        for (WeatherModel as : weatherModels){
-            weatherModelList.add(as);
-            recyclerAdapter.notifyItemInserted(weatherModelList.size()-1);
-            System.out.println(as.city.name+"*************");
-        }
-    }*/
-
     private void addToDatabase(WeatherModel weatherModel){
-        //placesDao.insert(weatherModel);
         compositeDisposable.add(placesDao.insert(weatherModel)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe());
     }
 
-
    public void addButton(View view){
        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
        LayoutInflater layoutInflater = MainActivity.this.getLayoutInflater();
-
        View dialogView= layoutInflater.inflate(R.layout.alerdialog_design,null);
        final EditText editText = dialogView.findViewById(R.id.placeName);
        alertDialog.setView(dialogView);
@@ -197,25 +162,27 @@ public class MainActivity extends FragmentActivity {
 
     public void addNewPlace(String cityname){
         //WeatherAPI service = retrofit.create(WeatherAPI.class);
-
-        compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(weatherAPI.getData(cityname,AppId)
+        compositeDisposable2 = new CompositeDisposable();
+        compositeDisposable2.add(weatherAPI.getData(cityname,AppId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<WeatherModel>(){
                     @Override
                     public void onComplete() {
-                        //addNewPlaceView(cityname);
-
+                        Toast.makeText(MainActivity.this,"Succes",Toast.LENGTH_SHORT).show();
                     }
                     @Override
                     public void onNext(@NonNull WeatherModel weatherModel) {
-                        //System.out.println(new Gson().toJson(weatherModel));
                         addToDatabase(weatherModel);
-                        mCustomPagerAdapter.addPage(MainFragment.newInstance(weatherModel.city.name));
-                        //mViewPager.invalidate();
-                        /**recyclerAdapter.notifyItemInserted(weatherModelList.size()-1);*/
-                        /**weatherModelList.add(weatherModel);*/
+                        String cityName = weatherModel.city.name.toUpperCase();
+                        if (cityName.contains("PROVINCE")){
+                            String target= String.copyValueOf("PROVINCE".toCharArray());
+                            cityName=cityName.replace(target, "");
+                        }
+                        mCustomPagerAdapter.addPage(MainFragment.newInstance(cityName));
+                        if (viewPagerState){
+                            mViewPager.getCurrentItem();
+                        }
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -223,6 +190,64 @@ public class MainActivity extends FragmentActivity {
                     }
                 }));
     }
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void run() {
+               String cityNameArg = mCustomPagerAdapter.getPages().
+                       get(mViewPager.getCurrentItem()).
+                       getArguments().getString("cityname");
+
+               weatherAPI.getData(cityNameArg,MainActivity.AppId)
+                       .subscribeOn(Schedulers.io())
+                       .observeOn(AndroidSchedulers.mainThread())
+                       .subscribe(MainActivity.this::upDateData);
+
+                binding.refresh.setRefreshing(false);
+            }
+        }, 150);
+
+    }
+
+    @SuppressLint("CheckResult")
+    public void upDateData(WeatherModel weatherModel){
+        placesDao.upDate(weatherModel.city,weatherModel.list,mCustomPagerAdapter.getPages().
+                get(mViewPager.getCurrentItem()).
+                getArguments().getString("cityname"))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+
+        String cityNameArg = mCustomPagerAdapter.getPages().
+                get(mViewPager.getCurrentItem()).
+                getArguments().getString("cityname");
+
+
+    }
+
+    /*@SuppressLint("CheckResult")
+    public void updateView(){
+        System.out.println("123213213213213");
+        mCustomPagerAdapter.upDatePage(MainFragment.newInstance("LONDON"),mViewPager.getCurrentItem());
+        placesDao.getByCityName("ADANA")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<WeatherModel>() {
+                    @Override
+                    public void onSuccess(@NonNull WeatherModel weatherModel) {
+
+                        System.out.println("SUCCESFULLL");
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+                });
+    }*/
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

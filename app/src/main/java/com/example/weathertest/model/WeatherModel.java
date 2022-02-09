@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @Entity(tableName = "Places")
-public class WeatherModel  {
+public class WeatherModel {
 
     @PrimaryKey(autoGenerate = true)
     public int uuid = 0;
@@ -28,7 +28,7 @@ public class WeatherModel  {
     @SerializedName("city")
     public City city;
 
-    public class Main{
+    public class Main {
         @ColumnInfo(name = "temp")
         @SerializedName("temp")
         public double temp;
@@ -55,7 +55,7 @@ public class WeatherModel  {
         public double temp_kf;
     }
 
-    public class Weather{
+    public class Weather {
         @ColumnInfo(name = "id")
         @SerializedName("id")
         public int id;
@@ -70,13 +70,13 @@ public class WeatherModel  {
         public String icon;
     }
 
-    public class Clouds{
+    public class Clouds {
         @ColumnInfo(name = "all")
         @SerializedName("all")
         public int all;
     }
 
-    public class Wind{
+    public class Wind {
         @ColumnInfo(name = "speed")
         @SerializedName("speed")
         public double speed;
@@ -88,19 +88,19 @@ public class WeatherModel  {
         public double gust;
     }
 
-    public class Sys{
+    public class Sys {
         @ColumnInfo(name = "pod")
         @SerializedName("pod")
         public String pod;
     }
 
-    public class Rain{
+    public class Rain {
         @ColumnInfo(name = "_3h")
         @SerializedName("3h")
         public double _3h;
     }
 
-    public class list{
+    public class list {
         @ColumnInfo(name = "dt")
         @SerializedName("dt")
         public int dt;
@@ -133,7 +133,7 @@ public class WeatherModel  {
         public Rain rain;
     }
 
-    public class Coord{
+    public class Coord {
         @ColumnInfo(name = "lon")
         @SerializedName("lon")
         public double lon;
@@ -142,16 +142,39 @@ public class WeatherModel  {
         public double lat;
     }
 
-    public class City{
+    public class City {
+        @ColumnInfo(name = "id")
+        @SerializedName("id")
         public int id;
         @ColumnInfo(name = "name")
         @SerializedName("name")
         public String name;
+        @ColumnInfo(name = "coord")
+        @SerializedName("coord")
         public Coord coord;
+        @ColumnInfo(name = "country")
+        @SerializedName("country")
         public String country;
+        @ColumnInfo(name = "population")
+        @SerializedName("population")
         public int population;
+        @ColumnInfo(name = "timezone")
+        @SerializedName("timezone")
         public int timezone;
+        @ColumnInfo(name = "sunrise")
+        @SerializedName("sunrise")
         public int sunrise;
+        @ColumnInfo(name = "sunset")
+        @SerializedName("sunset")
         public int sunset;
+    }
+
+    public WeatherModel(int uuid, String cod, int message, int cnt, List<WeatherModel.list> list, City city) {
+        this.uuid = uuid;
+        this.cod = cod;
+        this.message = message;
+        this.cnt = cnt;
+        this.list = list;
+        this.city = city;
     }
 }
