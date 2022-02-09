@@ -172,12 +172,13 @@ public class CustomPagerAdapter extends PagerAdapter {
             }
         }
         pages.remove(position);
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
 
     }
 
-    public void upDatePage(){
+    public void upDatePage(Fragment fragment,int position){
+     removePage(position);
+     pages.add(position,fragment);
+     notifyDataSetChanged();
     }
-
-
 }

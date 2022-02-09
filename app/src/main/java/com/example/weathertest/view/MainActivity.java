@@ -218,7 +218,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                 getArguments().getString("cityname"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(MainActivity.this::updateView);
 
         String cityNameArg = mCustomPagerAdapter.getPages().
                 get(mViewPager.getCurrentItem()).
@@ -227,7 +227,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
     }
 
-    /*@SuppressLint("CheckResult")
+    @SuppressLint("CheckResult")
     public void updateView(){
         System.out.println("123213213213213");
         mCustomPagerAdapter.upDatePage(MainFragment.newInstance("LONDON"),mViewPager.getCurrentItem());
@@ -246,7 +246,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
                     }
                 });
-    }*/
+    }
 
     @Override
     protected void onDestroy() {
