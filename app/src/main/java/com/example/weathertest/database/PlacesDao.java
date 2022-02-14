@@ -29,7 +29,8 @@ public interface PlacesDao {
     @Query("UPDATE Places SET city=:city,list=:list1 WHERE instr(city,'name'||char(34)||':'||char(34)||:cityname||char(34)) > 0")
     io.reactivex.Completable upDate(WeatherModel.City city,List<WeatherModel.list> list1,String cityname);
                 //,List<WeatherModel.list> list
-//
-    /*@Update(entity = WeatherModel.class)
-    io.reactivex.Completable upDate(WeatherModel weatherModel);*/
+
+    @Query("DELETE FROM Places WHERE instr(city,'name'||char(34)||':'||char(34)||:cityname||char(34)) > 0")
+    io.reactivex.Completable deleteByCityName(String cityname);
+
 }
