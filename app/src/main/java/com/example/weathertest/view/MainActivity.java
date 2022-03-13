@@ -152,21 +152,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         }
 
 
-        /*mViewPager.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("HELLHLELEHLEHLELHEL");
-            }
-        });*/
-
-                //mCustomPagerAdapter.removePage(mViewPager.getCurrentItem());
-                //mCustomPagerAdapter.notifyDataSetChanged();
-                //placesDao.deleteByCityName(mCustomPagerAdapter.getPages().
-                //        get(mViewPager.getCurrentItem()).
-                //        getArguments().getString("cityname"))
-                //        .subscribeOn(Schedulers.io())
-                //        .observeOn(AndroidSchedulers.mainThread())
-                //        .subscribe();
+      
 
 
         //Get all data in room database
