@@ -74,7 +74,6 @@ public class MainFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        //View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         binding = FragmentMainBinding.inflate(inflater,container,false);
 
         Gson gson = new GsonBuilder().setLenient().create();
@@ -126,7 +125,6 @@ public class MainFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void handleresponse(String cityName){
-        // Deleting 'PROVINCE' word from json data
 
         compositeDisposable.add(placesDao.getByCityName(cityName)
                 .subscribeOn(Schedulers.io())

@@ -80,7 +80,6 @@ public class CustomPagerAdapter extends PagerAdapter {
 
         if (fragment != currentPrimaryItem) {
             fragment.setMenuVisibility(false);
-            //fragment.setUserVisibleHint(false);
         }
         return fragment;
     }
@@ -139,15 +138,16 @@ public class CustomPagerAdapter extends PagerAdapter {
             return index;
     }
 
-    // ---------------------------------- Page actions ----------------------------------
+    // ---------------------------------- Page actions ----------------------------------//
 
     public void addPage(Fragment fragment){
-        //if (pages.size()<5){
+        if (pages.size()<5){
             fragmentsPosition.clear();
             pages.add(fragment);
             notifyDataSetChanged();
-       //else
-        //    Toast.makeText(currentPrimaryItem.getContext(), "Please delete any place and try again",Toast.LENGTH_LONG).show();
+        }
+       else
+           Toast.makeText(currentPrimaryItem.getContext(), "Please delete any place and try again",Toast.LENGTH_LONG).show();
     }
 
     public void removePage(int position) {
@@ -172,8 +172,6 @@ public class CustomPagerAdapter extends PagerAdapter {
             }
         }
         pages.remove(position);
-        //notifyDataSetChanged();
-
     }
 
     public void upDatePage(Fragment fragment,int position){

@@ -23,8 +23,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder_tags_chips, parent, false);
-
         ViewHolderTagsChipsBinding binding = ViewHolderTagsChipsBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
         return new RecyclerViewHolder(binding);
     }
