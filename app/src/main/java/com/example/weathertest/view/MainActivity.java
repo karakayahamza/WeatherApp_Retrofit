@@ -77,7 +77,6 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         private ActivityMainBinding binding;
         private boolean viewPagerState=false;
         private CustomPagerAdapter mCustomPagerAdapter;
-        private ViewPager mViewPager;
         private HashSet<String> CitiesHashSet = new HashSet<>();
         private SharedPreferences preferences;
         private boolean longClicked=false;
@@ -111,9 +110,6 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
         CitiesHashSet = (HashSet<String>) preferences.getStringSet("cities",new HashSet<>());
 
 
-        /**sadsa.add("HELLO");
-        recyclerViewAdapter = new RecyclerViewAdapter(sadsa);
-        binding.recyclerView.setAdapter(recyclerViewAdapter);*/
 
         //DATABASE initialize
         dataBase = Room.databaseBuilder(getApplicationContext(),PlaceNamesDataBase.class,"Places")
@@ -127,14 +123,11 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
         //Viewpager initialize
         mCustomPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager());
-        mViewPager =findViewById(R.id.container);//Add fragment
-        mViewPager.setAdapter(mCustomPagerAdapter);
-        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        binding.mViewPager.setAdapter(mCustomPagerAdapter);
+        binding.mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
 
         //RefreshLayout initialize
         binding.refresh.setOnRefreshListener(this);
-
-
 
 
 
@@ -151,8 +144,6 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                     .subscribe();
         }
 
-
-      
 
 
         //Get all data in room database
@@ -210,7 +201,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
        button.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               if (mViewPager.getAdapter().getCount()<10){
+               if (binding.mViewPager.getAdapter().getCount()<10){
                    String cityname = editText.getText().toString().toUpperCase();
 
                    if (!(CitiesHashSet.contains(cityname))){
@@ -219,8 +210,6 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                        CitiesHashSet.add(cityname.toUpperCase());
                        preferences.edit().putStringSet("cities",CitiesHashSet).apply();
                        viewPagerState = true;
-                       binding.recyclerView.setVisibility(View.VISIBLE);
-                       binding.container.setVisibility(View.INVISIBLE);
                    }
                    else
                        Toast.makeText(MainActivity.this,"This place already exists.",Toast.LENGTH_LONG).show();
@@ -230,17 +219,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
            }
        });
    }
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        if(inputMethodManager.isAcceptingText()){
-            inputMethodManager.hideSoftInputFromWindow(
-                    activity.getCurrentFocus().getWindowToken(),
-                    0
-            );
-        }
-    }
+
 
     public void addNewPlace(String cityname){
         //WeatherAPI service = retrofit.create(WeatherAPI.class);
@@ -263,7 +242,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
                         }
                         mCustomPagerAdapter.addPage(MainFragment.newInstance(cityName));
                         if (viewPagerState){
-                            mViewPager.setCurrentItem(mCustomPagerAdapter.getCount());
+                            binding.mViewPager.setCurrentItem(mCustomPagerAdapter.getCount());
                             mCustomPagerAdapter.notifyDataSetChanged();
                         }
                     }
@@ -288,7 +267,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
             @Override
             public void run() {
                String cityNameArg = mCustomPagerAdapter.getPages().
-                       get(mViewPager.getCurrentItem()).
+                       get(binding.mViewPager.getCurrentItem()).
                        getArguments().getString("cityname");
 
                weatherAPI.getData(cityNameArg,MainActivity.AppId)
@@ -304,7 +283,7 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
     @SuppressLint("CheckResult")
     public void upDateData(WeatherModel weatherModel){
         String cityNameArg = mCustomPagerAdapter.getPages().
-                get(mViewPager.getCurrentItem()).
+                get(binding.mViewPager.getCurrentItem()).
                 getArguments().getString("cityname");
 
         placesDao.upDate(weatherModel.city,weatherModel.list,cityNameArg)
@@ -330,14 +309,14 @@ public class MainActivity extends FragmentActivity implements SwipeRefreshLayout
 
     @SuppressLint("CheckResult")
     public void updateView(String ctyName){
-        mCustomPagerAdapter.upDatePage(MainFragment.newInstance(ctyName),mViewPager.getCurrentItem());
+        mCustomPagerAdapter.upDatePage(MainFragment.newInstance(ctyName),binding.mViewPager.getCurrentItem());
         placesDao.getByCityName(ctyName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<WeatherModel>() {
                     @Override
                     public void onSuccess(@NonNull WeatherModel weatherModel) {
-                        System.out.println("SUCCESFULLL");
+                        System.out.println("Successful");
                     }
 
                     @Override
